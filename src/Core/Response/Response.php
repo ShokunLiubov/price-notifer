@@ -27,7 +27,7 @@ class Response
         return $this;
     }
 
-    public function send(): mixed
+    public function send(): void
     {
         http_response_code($this->statusCode);
 
@@ -35,8 +35,9 @@ class Response
             header("$key: $value");
         }
 
-        echo $this->content;
-
-        return $this->content;
+        if (!empty($this->content)) {
+            header('Content-Length: ' . strlen($this->content));
+            file_put_contents('php://output', $this->content);
+        }
     }
 }
