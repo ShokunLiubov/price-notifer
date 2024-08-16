@@ -47,8 +47,8 @@ class IndexController
 
     public function emailVerify(): JsonResponse
     {
-        $email = $this->request->get('email');
-        $token = $this->request->get('token');
+        $email = $this->request->get('email', '');
+        $token = $this->request->get('token', '');
 
         $this->validateService->validateEmail($email);
 
