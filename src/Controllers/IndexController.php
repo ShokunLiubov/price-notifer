@@ -36,10 +36,10 @@ class IndexController
         $dto = SubscriptionDTO::fromArray(['email' => $email, 'olx_advert_id' => $advertId, 'link' => $link]);
 
         if ($this->olxSubscriberService->subscribe($dto)) {
-            return response()->view('Subscribed');
+            return response()->json(['Subscribed']);
         }
 
-        return response()->view('You are already subscribed');
+        return response()->json(['You are already subscribed']);
     }
 
     public function emailVerify(): Response
@@ -50,9 +50,9 @@ class IndexController
         $this->validateService->validateEmail($email);
 
         if ($this->olxSubscriberService->verifyEmail($email, $token)) {
-            return response()->view('Email verified');
+            return response()->json(['Email verified']);
         }
 
-        return response()->view('Not valid token');
+        return response()->json(['Not valid token']);
     }
 }
