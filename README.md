@@ -27,3 +27,9 @@ If you need to roll back all migrations
 ```sh
  vendor/bin/phinx rollback -e development -t 0
 ```
+
+Copy env file
+
+```bash
+    cp .env.example .env
+```
