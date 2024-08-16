@@ -1,0 +1,2 @@
+*/1 * * * * /usr/local/bin/php /var/www/src/Commands/Console.php SubscriberNotifier >> /var/log/cron.log 2>&1
+*/1 * * * * /usr/local/bin/php /var/www/src/Commands/Console.php SyncAdvertPrice >> /var/log/cron.log 2>&1
