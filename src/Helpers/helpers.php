@@ -68,13 +68,3 @@ function arrayByKey(?array $array, string $keyField): array
     $keys = array_column($array, $keyField);
     return array_combine($keys, $array);
 }
-
-function request(): Request
-{
-    return new Request();
-}
-
-function response(): Response
-{
-    return new Response();
-}

@@ -4,31 +4,34 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Response\Response;
 use App\Dto\SubscriptionDTO;
 use App\Services\OLXApiService;
 use App\Services\OLXSubscriberService;
 use App\Services\ValidateService;
 use PHPMailer\PHPMailer\Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class IndexController
 {
     private ValidateService $validateService;
     private OLXSubscriberService $olxSubscriberService;
+    private Request $request;
 
     public function __construct()
     {
         $this->validateService = new ValidateService();
         $this->olxSubscriberService = new OLXSubscriberService();
+        $this->request = Request::createFromGlobals();
     }
 
     /**
      * @throws Exception
      */
-    public function subscribe(): Response
+    public function subscribe(): JsonResponse
     {
-        $link = request()->get('link');
-        $email = request()->get('email');
+        $link = $this->request->get('link', '');
+        $email = $this->request->get('email', '');
 
         $this->validateService->validateEmail($email)->isValidUrl($link);
 
@@ -36,23 +39,23 @@ class IndexController
         $dto = SubscriptionDTO::fromArray(['email' => $email, 'olx_advert_id' => $advertId, 'link' => $link]);
 
         if ($this->olxSubscriberService->subscribe($dto)) {
-            return response()->json(['Subscribed']);
+            return (new JsonResponse(['Subscribed']))->send();
         }
 
-        return response()->json(['You are already subscribed']);
+        return (new JsonResponse(['You are already subscribed']))->send();
     }
 
-    public function emailVerify(): Response
+    public function emailVerify(): JsonResponse
     {
-        $email = request()->get('email');
-        $token = request()->get('token');
+        $email = $this->request->get('email');
+        $token = $this->request->get('token');
 
         $this->validateService->validateEmail($email);
 
         if ($this->olxSubscriberService->verifyEmail($email, $token)) {
-            return response()->json(['Email verified']);
+            return (new JsonResponse(['Email verified']))->send();
         }
 
-        return response()->json(['Not valid token']);
+        return (new JsonResponse(['Not valid token']))->send();
     }
 }
